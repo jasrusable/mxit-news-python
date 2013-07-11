@@ -1,0 +1,13 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+    {% block head %}
+    <title>{% block title %} {{ page_title }} {% endblock %}</title>
+    {% endblock %}
+</head>
+<body>
+    <div id="content">{% block content %}{% endblock %}</div>
+	<br/>
+	<a href="{{ back_url }}">back</a>
+</body>
+</html>

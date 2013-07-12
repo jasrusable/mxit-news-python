@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<a href=" {{ news_url }}">news</a>
+    <p> Select a topic below or type something to search for.
+    </p>
+    <ul>
+    {% for topic_id, topic in topics.iteritems() %}
+    <li><a href="{{url_for('topic', topic_id=topic_id)}}">{{topic['name']}}</a></li>
+    {% endfor %}
+    </ul>
+    {% if debug %}
+        <form action='/' method='POST'>
+            <input type='text' name='X-Mxit-User-Input'/>
+            <input type='submit'/>
+        </form>
+    {% endif %}
 {% endblock %}
+
+

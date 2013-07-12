@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>topic</h1>
-	{% for item in ff %}
-        <li><a href="{{ item['url'] }}">{{ item['title'] }}</a></li>
+    <h1>{{topic_name}}</h1>
+    <ul>
+        {% for article in articles %}
+            <li>
+                <a href={{url_for('article', topic_id=topic_id, article_url=article['url'])}}>
+                    {{article['title']}}
+                    {% if article['image_url'] %}
+                        <br/>
+                        <img src={{article['image_url']}}></img>
+                    {% endif %}
+                </a>
+            </li>
         {% endfor %}
-
+    </ul>
 {% endblock %}
-

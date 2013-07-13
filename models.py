@@ -14,6 +14,7 @@ class Topic(object):
 class Article(object):
     def __init__(self, title, url, text=None):
         self.title = Markup(title)
+        print(url)
         self.url = url
         self.text = Markup(text)
 

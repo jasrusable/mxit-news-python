@@ -2,6 +2,7 @@ from models import Topic, Article
 import requests
 import feedparser
 import urlparse
+from base64 import urlsafe_b64encode as b64encode
 
 class GoogleNews(object):
     topics = {
@@ -43,6 +44,7 @@ class GoogleNews(object):
         url_parts = urlparse.urlparse(entry.link)
         query_parts = urlparse.parse_qs(url_parts.query)
         url = query_parts['url'][0]
+        url = b64encode(url)
         return Article(title=entry.title, url=url)
 
 class GoogleNewsSearch(object):
@@ -53,7 +55,7 @@ class GoogleNewsSearch(object):
 
     def result_to_article(self, result):
         title = ('%s - %s') % (result['title'], result['publisher'])
-        url = result['url']
+        url = b64encode(result['url'])
         return Article(title, url)
 
     def search(self, query):

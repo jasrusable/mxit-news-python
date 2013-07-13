@@ -30,6 +30,8 @@ class Processors(object):
 			'sport.iafrica.com' : XPathProcessor('//*[@id="articleBodyPrint"]'),
             'ewn.co.za': XPathProcessor('//*[@id="main"]'),
             'news.cnet.com': XPathProcessor('//*[@id="contentBody"]/div[2]/div'),
+			'www.sport24.co.za': XPathProcessor('//*[@id="articleBodyContainer"]'),	
+			'www.bbc.co.uk': XPathProcessor('//*[@id="storypage-container"]/div[1]/div[4]'),
             }
 
     def get_site_id(self, url):

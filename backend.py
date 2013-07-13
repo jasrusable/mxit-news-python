@@ -72,17 +72,24 @@ class GoogleNewsSearch(object):
 
 class ArticleReader(object):
     def fetch_article(self, url):
+        # Fetch the article body
         html = self.fetch_url(url)
-        html = html.encode('utf-8', 'ignore')
+        # Encode the body as a utf-8 string.
+        #html = html.encode('utf-8', 'ignore')
+
+        # Scrape the text from the article.
         text = self.scrape_text(html)
+
+        # Paragraph the text.
         text = self.insert_paragraphs(text)
-        text = text.replace('\n', '<br/>')
+
         title = self.scrape_title(html)
 
         return Article(url=url, title=title, text=text)
 
     def fetch_url(self, url):
-        return requests.get(url).text
+        return open('temp.html', 'r').read()
+        #return requests.get(url).text
 
     def extract_longest(self, seq, bad, max_bad):
         # start of current subsequnce
@@ -116,10 +123,11 @@ class ArticleReader(object):
                 if score > best_score:
                     best_score = score
                     best = current
-        return ''.join(best)
+        return best
 
     def insert_paragraphs(self, text):
-        return text
+        text = [line for line in text if not line == '\n']
+        return '<br/><br/>'.join(text)
 
     def scrape_text(self, html):
         soup = BeautifulSoup(html)

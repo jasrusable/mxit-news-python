@@ -17,7 +17,7 @@ def search(query):
     results = cached_call(news_searcher.search, query=query)
     return render_template('search_results.html', results=results, query=query,
             with_back=get_with_back(request),
-            back_url=request.args.get('back_url'))
+            back_url='/')
 
 
 @app.route('/', methods=['GET', 'POST'])

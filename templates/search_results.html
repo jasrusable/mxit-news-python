@@ -4,10 +4,14 @@
     <b> News - '{{query}}' </b>
 
     <ul>
-        {% for result in results %}
-            <li>
-                <a href={{result.get_display_url()}}>{{result.title}}</a>
-            </li>
-        {% endfor %}
+        {% if results %}
+            {% for result in results %}
+                <li>
+                    <a href={{result.get_display_url()}}>{{result.title}}</a>
+                </li>
+            {% endfor %}
+        {% else %}
+            <p> Sorry no results. </p>
+        {% endif %}
     </ul>
 {% endblock %}

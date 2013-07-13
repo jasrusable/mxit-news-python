@@ -32,6 +32,11 @@ class Processors(object):
             'news.cnet.com': XPathProcessor('//*[@id="contentBody"]/div[2]/div'),
 			'www.sport24.co.za': XPathProcessor('//*[@id="articleBodyContainer"]'),	
 			'www.bbc.co.uk': XPathProcessor('//*[@id="storypage-container"]/div[1]/div[4]'),
+			'sport.iafrica.com': XPathProcessor('//*[@id="articleBodyPrint"]'),
+			'www.sport24.co.za': XPathProcessor('//*[@id="articleBodyContainer"]'),	
+			'www.bbc.co.uk': XPathProcessor('//*[@id="storypage-container"]/div[1]/div[4]'),
+			'www.smh.com.au': XPathProcessor('//*[@id="content"]/div[3]'),
+			'www.telegraph.co.uk' : XPathProcessor('//*[@id="mainBodyArea"]'),
             }
 
     def get_site_id(self, url):

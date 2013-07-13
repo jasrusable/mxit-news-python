@@ -1,14 +1,10 @@
 #!/bin/bash
 from flask import Flask, url_for, render_template, redirect, request
-import feedparser
-from urlparse import urlparse, parse_qs
 from base64 import urlsafe_b64decode as b64decode
 
-from backend import GoogleNews, ArticleParser, GoogleNewsSearch
-
-google_news = GoogleNews()
-google_news_search = GoogleNewsSearch()
-article_parser = ArticleParser()
+news_searcher = GoogleNewsSearch()
+news_browser = GoogleNews()
+article_reader = ArticleReader()
 
 app = Flask(__name__)
 

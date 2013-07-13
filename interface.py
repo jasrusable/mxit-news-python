@@ -2,11 +2,13 @@
 from flask import Flask, url_for, render_template, redirect, request
 import feedparser
 from urlparse import urlparse, parse_qs
-from backend import GoogleNews
 from base64 import urlsafe_b64decode as b64decode
-import backend
+
+from backend import GoogleNews, ArticleParser, GoogleNewsSearch
 
 google_news = GoogleNews()
+google_news_search = GoogleNewsSearch()
+article_parser = ArticleParser()
 
 app = Flask(__name__)
 
@@ -17,7 +19,7 @@ def index():
     """
     query = request.form.get('X-Mxit-User-Input')
     if query:
-        results = ['oua']
+        results = google_news_search.search(query)
         return render_template('search_results.html', results=results, query=query)
 
     topics = google_news.get_topics()
@@ -35,10 +37,21 @@ def topic(topic_id):
             topic_id=topic_id,
             topic_name=topic_name)
 
+@app.route('/search_article/<article_url>')
+def search_article(article_url):
+    url = b64decode(article_url.encode('utf-8'))
+    url = urlparse.decode(url)
+    title, text = article_parser.fetch_article(url)
+    return render_template('search_article.html',
+            text=text,
+            title=title
+            )
+
+
 @app.route('/news/<topic_id>/article/<article_url>')
 def article(article_url, topic_id):
     url = b64decode(article_url.encode('utf-8'))
-    title, text = backend.fetch_article(url)
+    title, text = article_parser.fetch_article(url)
     return render_template('article.html',
             text=text,
             title=title,

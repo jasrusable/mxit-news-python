@@ -1,5 +1,6 @@
 #! /bin/python2
 import feedparser
+import json
 import re
 from urlparse import urlparse, parse_qs
 import urllib
@@ -9,81 +10,104 @@ from flask import Markup
 from base64 import urlsafe_b64encode as b64encode
 from BeautifulSoup import BeautifulSoup
 
-def fetch_url(url):
-    return requests.get(url).text
+class GoogleNewsSearch(object):
+    def search(self, query):
+        SEARCH_URL = 'https://ajax.googleapis.com/ajax/services/search/news'
+        params = {
+                'v': '1.0',
+                'q': query,
+                }
+        response = requests.get(SEARCH_URL, params=params)
+        json_response = json.loads(response.text)
+        json_results = json_response['responseData']['results']
 
-def extract_longest(seq, bad, max_bad):
-    # start of current subsequnce
-    head = 0
-    # number of non bad items since head
-    score = 0
-    # best sequence so far
-    best = []
-    #current sequence
-    current = []
-    # number of consecutive bad chars so far
-    bad_count = 0
-    best_score = 0
+        results = [self.markup_search_result(result) for result in json_results]
 
-    for i in range(len(seq)):
-        s = unescape(seq[i])
-        if s == bad:
-            bad_count += 1
-            if bad_count > max_bad:
-                score = 0
-                head = i
-                current = [] 
-        else:
-            bad_count = 0
-            score += 1
-            if len(s) > 32:
-                score += len(s)
-    
-        if score > 0:
-            current.append(s)
-            if score > best_score:
-                best_score = score
-                best = current
-    return ''.join(best)
+        return results
 
-def insert_paragraphs(text):
-    return text
+    def markup_search_result(self, result):
+        b64url = b64encode(result['url'])
+        link = '/search_article/' + b64url
+        return {
+                'title': Markup(result['title']),
+                'link': link
+                }
 
+class ArticleParser(object):
+    """Fetch an articles body and title.
+    """
+    def fetch_article(self, url):
+        html = self.fetch_url(url)
+        html = html.encode('utf-8', 'ignore')
+        text = self.scrape_text(html)
+        text = self.insert_paragraphs(text)
+        text = text.replace('\n', '<br/>')
 
-def scrape_text(html):
-    soup = BeautifulSoup(html)
-    texts = soup.findAll(text=True)
-    visible_texts = filter(visible, texts)
-    text = extract_longest(visible_texts, u'\n', 2)
-    return text
+        title = self.scrape_title(html)
+        return title, Markup(text)
 
-def scrape_title(html):
-    soup = BeautifulSoup(html)
-    title = soup.title.text
-    return title
+    def fetch_url(self, url):
+        return requests.get(url).text
 
-def unescape(text):
-    """Resolves &#xxx; HTML entities (and some others)."""
-    out = text.replace('&nbsp;', ' ')
-    return out
+    def extract_longest(self, seq, bad, max_bad):
+        # start of current subsequnce
+        head = 0
+        # number of non bad items since head
+        score = 0
+        # best sequence so far
+        best = []
+        #current sequence
+        current = []
+        # number of consecutive bad chars so far
+        bad_count = 0
+        best_score = 0
 
-def visible(element):
-    if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
-        return False
-    elif re.match('<!--.*-->', str(element)):
-        return False
-    return True
+        for i in range(len(seq)):
+            s = self.unescape(seq[i])
+            if s == bad:
+                bad_count += 1
+                if bad_count > max_bad:
+                    score = 0
+                    head = i
+                    current = [] 
+            else:
+                bad_count = 0
+                score += 1
+                if len(s) > 32:
+                    score += len(s)
+        
+            if score > 0:
+                current.append(s)
+                if score > best_score:
+                    best_score = score
+                    best = current
+        return ''.join(best)
 
+    def insert_paragraphs(self, text):
+        return text
 
-def fetch_article(url):
-    html = fetch_url(url)
-    html = html.encode('utf-8', 'ignore')
-    text = scrape_text(html)
-    text = insert_paragraphs(text)
-    text = text.replace('\n', '<br/>')
+    def scrape_text(self, html):
+        soup = BeautifulSoup(html)
+        texts = soup.findAll(text=True)
+        visible_texts = filter(self.visible, texts)
+        text = self.extract_longest(visible_texts, u'\n', 2)
+        return text
 
-    title = scrape_title(html)
-    return title, Markup(text)
+    def scrape_title(self, html):
+        soup = BeautifulSoup(html)
+        title = soup.title.text
+        return title
+
+    def unescape(self, text):
+        out = text.replace('&nbsp;', ' ')
+        return out
+
+    def visible(self, element):
+        if element.parent.name in ['style', 'script', '[document]', 'head', 'title']:
+            return False
+        elif re.match('<!--.*-->', str(element)):
+            return False
+        return True
 
 class GoogleNews(object):
     regions = [

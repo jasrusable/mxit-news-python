@@ -27,11 +27,12 @@ class Processors(object):
             'www.kickoff.com': XPathProcessor('//*[@id="central-wrapper"]/section'),
             'www.guardian.co.uk': XPathProcessor('//*[@id="article-body-blocks"]'),
             'www.skysports.com': XPathProcessor('//*[@id="ss-content"]'),
-            'www.iol.co.za': XPathProcessor('//*[@id="article_container"]')
-			'sport.iafrica.com' : XPathProcessor('//*[@id="articleBodyPrint"]'),
+            'www.iol.co.za': XPathProcessor('//*[@id="article_container"]'),
+			'sport.iafrica.com': XPathProcessor('//*[@id="articleBodyPrint"]'),
 			'www.sport24.co.za': XPathProcessor('//*[@id="articleBodyContainer"]'),	
 			'www.bbc.co.uk': XPathProcessor('//*[@id="storypage-container"]/div[1]/div[4]'),
-
+			'www.smh.com.au': XPathProcessor('//*[@id="content"]/div[3]'),
+			'www.telegraph.co.uk' : XPathProcessor('//*[@id="mainBodyArea"]'),
             }
 
     def get_site_id(self, url):

@@ -27,7 +27,7 @@ class Processors(object):
             'www.kickoff.com': XPathProcessor('//*[@id="central-wrapper"]/section'),
             'www.guardian.co.uk': XPathProcessor('//*[@id="article-body-blocks"]'),
             'www.skysports.com': XPathProcessor('//*[@id="ss-content"]'),
-
+			'sport.iafrica.com' : XPathProcessor('//*[@id="articleBodyPrint"]'),
 
             }
 

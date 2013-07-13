@@ -21,15 +21,15 @@ class XPathProcessor(Processor):
 
 class Processors(object):
     processors = {
-            'www.news24.com': XPathProcessor('//*[@id="article_special"]'),
             'mg.co.za': XPathProcessor('//*[@id="body_content"]'),
             'www.supersport.com': XPathProcessor('//*[@id="articlecontent"]'),
             'www.kickoff.com': XPathProcessor('//*[@id="central-wrapper"]/section'),
             'www.guardian.co.uk': XPathProcessor('//*[@id="article-body-blocks"]'),
             'www.skysports.com': XPathProcessor('//*[@id="ss-content"]'),
-            'www.iol.co.za': XPathProcessor('//*[@id="article_container"]')
+            'www.iol.co.za': XPathProcessor('//*[@id="article_container"]'),
 			'sport.iafrica.com' : XPathProcessor('//*[@id="articleBodyPrint"]'),
-
+            'ewn.co.za': XPathProcessor('//*[@id="main"]'),
+            'news.cnet.com': XPathProcessor('//*[@id="contentBody"]/div[2]/div'),
             }
 
     def get_site_id(self, url):
@@ -41,8 +41,4 @@ class Processors(object):
         if site_id in self.processors:
             return self.processors[site_id]
         else:
-            print()
-            print(url)
-            print(site_id)
-            print()
             return Processor()

@@ -2,6 +2,9 @@
 from flask import Flask, url_for, render_template, redirect, request
 from base64 import urlsafe_b64decode as b64decode
 
+from backend import GoogleNewsSearch, GoogleNews, ArticleReader
+from util import cached_call
+
 news_searcher = GoogleNewsSearch()
 news_browser = GoogleNews()
 article_reader = ArticleReader()
@@ -12,9 +15,8 @@ def search(query):
     """Respond with a list of search results.
     """
 
-    results = news_searcher.search(query)
+    results = cached_call(news_searcher.search, query=query)
     return render_template('search_results.html', results=results, query=query)
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -28,7 +30,7 @@ def index():
         return search(query)
     else:
         # The user is requesting the home page.
-        topics = news_browser.get_topics()
+        topics = news_browser.topics
         return render_template('index.html',
                 topics=topics,
                 debug=True)
@@ -36,17 +38,14 @@ def index():
 @app.route('/topic/')
 def topic():
     topic_id = request.args.get('id')
-    topic = news_browser.fetch_topic(topic_id)
-
+    topic = cached_call(news_browser.fetch_topic, topic_id)
     return render_template('topic.html', topic=topic)
 
 
 @app.route('/article/')
 def article():
-    b64_url = request.args.get('b64_url')
-    url = b64decode(b64_url.encode('ascii'))
-    article = article_reader.fetch_article(url)
-
+    url = request.args.get('url')
+    article = cached_call(article_reader.fetch_article, url)
     return render_template('article.html',article=article)
 
 if __name__ == '__main__':

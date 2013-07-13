@@ -129,7 +129,7 @@ class ArticleReader(object):
         text = [line for line in text if not line == '\n']
         text_block = '. '.join(text)
         text = text_block.split('. ')
-        return '.<br/><br/>'.join(text)
+        return '.<br/>'.join(text)
 
     def scrape_text(self, html):
         soup = BeautifulSoup(html)

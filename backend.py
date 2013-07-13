@@ -88,8 +88,7 @@ class ArticleReader(object):
         return Article(url=url, title=title, text=text)
 
     def fetch_url(self, url):
-        return open('temp.html', 'r').read()
-        #return requests.get(url).text
+        return requests.get(url).text
 
     def extract_longest(self, seq, bad, max_bad):
         # start of current subsequnce

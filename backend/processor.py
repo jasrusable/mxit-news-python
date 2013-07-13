@@ -29,7 +29,8 @@ class Processors(object):
             'www.skysports.com': XPathProcessor('//*[@id="ss-content"]'),
             'www.iol.co.za': XPathProcessor('//*[@id="article_container"]')
 			'sport.iafrica.com' : XPathProcessor('//*[@id="articleBodyPrint"]'),
-			'www.sport24.co.za':XPathProcessor('//*[@id="articleBodyContainer"]'),	
+			'www.sport24.co.za': XPathProcessor('//*[@id="articleBodyContainer"]'),	
+			'www.bbc.co.uk': XPathProcessor('//*[@id="storypage-container"]/div[1]/div[4]'),
 
             }
 

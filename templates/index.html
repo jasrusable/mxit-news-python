@@ -6,7 +6,7 @@
     <ul>
     {% for topic_id, topic in topics.iteritems() %}
         <li>
-            <a href="{{topic.get_url()}}">
+            <a href="{{with_back(topic.get_url())}}">
                 {{topic.name}}
             </a>
         </li>

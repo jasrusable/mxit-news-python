@@ -5,7 +5,7 @@
     <ul>
         {% for article in topic.articles %}
             <li>
-                <a href={{article.get_display_url()}}>
+                <a href={{with_back(article.get_display_url())}}>
                     {{article.title}}
                 </a>
             </li>

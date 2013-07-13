@@ -2,6 +2,7 @@ from models import Article, Topic
 from BeautifulSoup import BeautifulSoup
 import re
 import requests
+from base64 import urlsafe_b64decode as b64decode
 
 from backend.processor import Processors
 processors = Processors()
@@ -13,6 +14,7 @@ class ArticleReader(object):
         """Fetch a webpage, extract it's title and body
         and return these in an Article object.
         """
+        url = b64decode(url.encode('ascii'))
         # Fetch the article body
         html = self.fetch_url(url)
 
@@ -23,7 +25,6 @@ class ArticleReader(object):
         title = self.scrape_title(html)
 
         # Apply processor.
-        print('hle')
         processor = processors.get_processor(url)
         html = processor.process(html)
 
